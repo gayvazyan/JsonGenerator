@@ -1,10 +1,10 @@
 ﻿using Json.Schema.Generation;
 
-namespace JsonGenerator.Core.EmrFormTemplatesSchema;
+namespace JsonGenerator.UI.Models.EmrFormTemplatesSchema;
 
-[Title(nameof(ActivityAndTransportationWaiver))]
-[Description(nameof(ActivityAndTransportationWaiver))]
-public class ActivityAndTransportationWaiver
+[Title(nameof(AAABBB))]
+[Description(nameof(AAABBB))]
+public class AAABBB
 {
     [Required]
     public string CompanyName { get; set; }

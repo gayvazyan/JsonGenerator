@@ -123,7 +123,8 @@ namespace JsonGenerator.UI
         {
             var projectRoot = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
 
-            comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(projectRoot.Remove(projectRoot.Length - 3), "Models", "EmrFormTemplatesSchema"));
+            comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(_directory, "Classes"));
+            //comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(projectRoot.Remove(projectRoot.Length - 3), "Models", "EmrFormTemplatesSchema"));
 
             if (!tabControl.TabPages.Contains(tabPageGeneral))
                 tabControl.TabPages.Add(tabPageGeneral);
@@ -215,7 +216,7 @@ namespace JsonGenerator.UI
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
 
-           
+
             SaveBaseFolderName.Enabled = false;
             SaveBaseFolderName.BackColor = SystemColors.Window;
         }
@@ -230,7 +231,7 @@ namespace JsonGenerator.UI
 
             if (!Directory.Exists(Path.Combine(directory, _config.JsonExampleFolderName)))
                 Directory.CreateDirectory(Path.Combine(directory, _config.JsonExampleFolderName));
-           
+
             SaveJsonFolderName.Enabled = false;
             SaveJsonFolderName.BackColor = SystemColors.Window;
         }
@@ -242,7 +243,7 @@ namespace JsonGenerator.UI
 
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
-            
+
             if (!Directory.Exists(Path.Combine(directory, _config.JsonSchemasFolderName)))
                 Directory.CreateDirectory(Path.Combine(directory, _config.JsonSchemasFolderName));
 
@@ -255,7 +256,7 @@ namespace JsonGenerator.UI
 
             if (classType != null)
                 CreateFileForSchema(classType, _className);
-            
+
             btnGeneretSchema.Enabled = false;
             btnGeneretSchema.BackColor = SystemColors.Window;
         }
@@ -289,7 +290,6 @@ namespace JsonGenerator.UI
             btnGeneretExample.Enabled = false;
             btnGeneretExample.BackColor = SystemColors.Window;
         }
-        
         private void CreateFileForExampleJson<TModel>(string fileName)
         {
             var fake = AutoBogus.AutoFaker.Generate<TModel>();
@@ -303,7 +303,6 @@ namespace JsonGenerator.UI
             richTextBoxJsonExample.Text = fakeJson;
             richTextBoxJsonExample.Visible = true;
         }
-
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             About about = new About();
@@ -339,17 +338,16 @@ namespace JsonGenerator.UI
         }
         private void btnInsertDefoultClasses_Click(object sender, EventArgs e)
         {
-
-            var projectRoot = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            string sourceDirectory = Path.Combine(projectRoot.Remove(projectRoot.Length - 3), "Models", "EmrFormTemplatesSchema");
-
+            string sourceDirectory = Path.Combine(_directory, "Classes");
+           
             Assamblies = AppDomain.CurrentDomain.GetAssemblies();
-
+            
             progressBarClassCopy.Visible = true;
 
-            if (Directory.Exists(sourceDirectory))
-            {
-                var di = new DirectoryInfo(sourceDirectory);
+            if (!Directory.Exists(sourceDirectory))
+                Directory.CreateDirectory(sourceDirectory);
+
+            var di = new DirectoryInfo(sourceDirectory);
                 TemplateNames.Clear();
                 TemplateNames.Add(string.Empty);
 
@@ -365,7 +363,7 @@ namespace JsonGenerator.UI
                         TemplateNames.Add(className.Remove(className.Length - 3));
                     }
                 }
-            }
+           
 
             progressBarClassCopy.Visible = false;
 
@@ -376,44 +374,6 @@ namespace JsonGenerator.UI
 
             MessageBox.Show("Գործողությունը հաջողությամբ կատարվեց", "Կրկնօրինակում", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        //private void CopyClasses(string sourceDirectory, string destinationDirectory)
-        //{
-
-        //    if (!Directory.Exists(destinationDirectory))
-        //    {
-        //        MessageBox.Show("Լրացրեք Class-ների Folder-ի անվանումը", "Սխալ ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        return;
-        //    }
-
-        //    if (!Directory.Exists(sourceDirectory))
-        //    {
-        //        MessageBox.Show("Source Directory գոյություն չունի", "Սխալ ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        return;
-        //    }
-
-        //    progressBarClassCopy.Visible = true;
-
-        //    // Get all.cs files in the source directory
-        //    string[] csFiles = Directory.GetFiles(sourceDirectory, "*.cs");
-
-        //    // Copy each.cs file to the destination directory
-        //    foreach (string filePath in csFiles)
-        //    {
-        //        string fileName = Path.GetFileName(filePath);
-        //        string destinationPath = Path.Combine(destinationDirectory, fileName);
-        //        Application.DoEvents();
-        //        Thread.Sleep(200);
-
-        //        // Check if the file already exists in the destination directory
-        //        if (!File.Exists(destinationPath))
-        //            File.Copy(filePath, destinationPath, true);
-        //    }
-
-        //    progressBarClassCopy.Visible = false;
-
-        //    MessageBox.Show("Գործողությունը հաջողությամբ կատարվեց", "Կրկնօրինակում", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-        //}
         private void btnAddNewClass_Click(object sender, EventArgs e)
         {
             using (var openFileDialog = new OpenFileDialog())
@@ -434,8 +394,10 @@ namespace JsonGenerator.UI
             string filePath = labelClassPath.Text;
 
             // Construct the destination file path
-            var projectRoot = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            string destinationFilePath = Path.Combine(projectRoot.Remove(projectRoot.Length - 3), "Models", "EmrFormTemplatesSchema", Path.GetFileName(filePath));
+             string destinationFilePath = Path.Combine(_directory, "Classes");
+
+            if (!Directory.Exists(destinationFilePath))
+                Directory.CreateDirectory(destinationFilePath);
 
             // Copy the file to the destination directory
             File.Copy(filePath, destinationFilePath, true); // Overwrite if the file already exists
@@ -443,6 +405,38 @@ namespace JsonGenerator.UI
             btnSaveClass.Enabled = false;
             labelClassPath.Text = string.Empty;
             btnSaveClass.BackColor = Color.Transparent;
+            MessageBox.Show("Գործողությունը հաջողությամբ կատարվեց", "Կրկնօրինակում", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnUpdateClasses_Click(object sender, EventArgs e)
+        {
+            string destinationDirectory = Path.Combine(_directory, "Classes");
+
+            if (!Directory.Exists(destinationDirectory))
+                Directory.CreateDirectory(destinationDirectory);
+
+            string sourceDirectory = string.Empty;
+
+            progressBarUpdate.Visible = true;
+
+            // Get all.cs files in the source directory
+            string[] csFiles = Directory.GetFiles(sourceDirectory, "*.cs");
+
+            // Copy each.cs file to the destination directory
+            foreach (string filePath in csFiles)
+            {
+                string fileName = Path.GetFileName(filePath);
+                string destinationPath = Path.Combine(destinationDirectory, fileName);
+                Application.DoEvents();
+                Thread.Sleep(200);
+
+                // Check if the file already exists in the destination directory
+                if (!File.Exists(destinationPath))
+                    File.Copy(filePath, destinationPath, true);
+            }
+
+            progressBarUpdate.Visible = false;
+
             MessageBox.Show("Գործողությունը հաջողությամբ կատարվեց", "Կրկնօրինակում", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }

@@ -45,6 +45,7 @@
             btnGeneretSchema = new Button();
             btnGeneretExample = new Button();
             tabPageConfig = new TabPage();
+            btnUpdateClasses = new Button();
             btnSaveClass = new Button();
             labelClassPath = new Label();
             labelAddClassTitle = new Label();
@@ -66,6 +67,7 @@
             textBoxBaseDirectory = new TextBox();
             label2 = new Label();
             bindingSource1 = new BindingSource(components);
+            progressBarUpdate = new ProgressBar();
             menuStrip.SuspendLayout();
             tabControl.SuspendLayout();
             tabPageGeneral.SuspendLayout();
@@ -205,6 +207,8 @@
             // 
             // tabPageConfig
             // 
+            tabPageConfig.Controls.Add(progressBarUpdate);
+            tabPageConfig.Controls.Add(btnUpdateClasses);
             tabPageConfig.Controls.Add(btnSaveClass);
             tabPageConfig.Controls.Add(labelClassPath);
             tabPageConfig.Controls.Add(labelAddClassTitle);
@@ -233,11 +237,21 @@
             tabPageConfig.Text = "Կարգավորումներ";
             tabPageConfig.UseVisualStyleBackColor = true;
             // 
+            // btnUpdateClasses
+            // 
+            btnUpdateClasses.BackColor = Color.DeepSkyBlue;
+            btnUpdateClasses.Location = new Point(984, 233);
+            btnUpdateClasses.Name = "btnUpdateClasses";
+            btnUpdateClasses.Size = new Size(294, 59);
+            btnUpdateClasses.TabIndex = 23;
+            btnUpdateClasses.Text = "Թարմացնել Class-ները";
+            btnUpdateClasses.UseVisualStyleBackColor = false;
+            // 
             // btnSaveClass
             // 
             btnSaveClass.BackColor = Color.Transparent;
             btnSaveClass.Enabled = false;
-            btnSaveClass.Location = new Point(654, 406);
+            btnSaveClass.Location = new Point(654, 453);
             btnSaveClass.Name = "btnSaveClass";
             btnSaveClass.Size = new Size(248, 59);
             btnSaveClass.TabIndex = 22;
@@ -248,7 +262,7 @@
             // labelClassPath
             // 
             labelClassPath.AutoSize = true;
-            labelClassPath.Location = new Point(326, 487);
+            labelClassPath.Location = new Point(326, 534);
             labelClassPath.Name = "labelClassPath";
             labelClassPath.Size = new Size(0, 20);
             labelClassPath.TabIndex = 21;
@@ -257,7 +271,7 @@
             // 
             labelAddClassTitle.AutoSize = true;
             labelAddClassTitle.Font = new Font("Segoe UI", 16.2F, FontStyle.Regular, GraphicsUnit.Point);
-            labelAddClassTitle.Location = new Point(637, 341);
+            labelAddClassTitle.Location = new Point(637, 388);
             labelAddClassTitle.Name = "labelAddClassTitle";
             labelAddClassTitle.Size = new Size(288, 38);
             labelAddClassTitle.TabIndex = 20;
@@ -265,7 +279,7 @@
             // 
             // progressBarClassCopy
             // 
-            progressBarClassCopy.Location = new Point(326, 540);
+            progressBarClassCopy.Location = new Point(326, 587);
             progressBarClassCopy.MarqueeAnimationSpeed = 30;
             progressBarClassCopy.Name = "progressBarClassCopy";
             progressBarClassCopy.Size = new Size(886, 29);
@@ -277,7 +291,7 @@
             // btnAddNewClass
             // 
             btnAddNewClass.BackColor = Color.LightCyan;
-            btnAddNewClass.Location = new Point(326, 406);
+            btnAddNewClass.Location = new Point(326, 453);
             btnAddNewClass.Name = "btnAddNewClass";
             btnAddNewClass.Size = new Size(248, 59);
             btnAddNewClass.TabIndex = 19;
@@ -289,7 +303,7 @@
             // 
             btnInsertDefoultClasses.BackColor = Color.Transparent;
             btnInsertDefoultClasses.Enabled = false;
-            btnInsertDefoultClasses.Location = new Point(964, 406);
+            btnInsertDefoultClasses.Location = new Point(964, 453);
             btnInsertDefoultClasses.Name = "btnInsertDefoultClasses";
             btnInsertDefoultClasses.Size = new Size(248, 59);
             btnInsertDefoultClasses.TabIndex = 18;
@@ -300,7 +314,7 @@
             // btnSetDefultConfigs
             // 
             btnSetDefultConfigs.BackColor = Color.LawnGreen;
-            btnSetDefultConfigs.Location = new Point(443, 240);
+            btnSetDefultConfigs.Location = new Point(326, 232);
             btnSetDefultConfigs.Name = "btnSetDefultConfigs";
             btnSetDefultConfigs.Size = new Size(307, 59);
             btnSetDefultConfigs.TabIndex = 17;
@@ -311,7 +325,7 @@
             // btnDeleteAllConfig
             // 
             btnDeleteAllConfig.BackColor = Color.Red;
-            btnDeleteAllConfig.Location = new Point(782, 241);
+            btnDeleteAllConfig.Location = new Point(665, 233);
             btnDeleteAllConfig.Name = "btnDeleteAllConfig";
             btnDeleteAllConfig.Size = new Size(294, 59);
             btnDeleteAllConfig.TabIndex = 16;
@@ -431,6 +445,17 @@
             label2.TabIndex = 0;
             label2.Text = "Գլխավոր directory-ի անվանումը";
             // 
+            // progressBarUpdate
+            // 
+            progressBarUpdate.Location = new Point(335, 336);
+            progressBarUpdate.MarqueeAnimationSpeed = 30;
+            progressBarUpdate.Name = "progressBarUpdate";
+            progressBarUpdate.Size = new Size(886, 29);
+            progressBarUpdate.Step = 50;
+            progressBarUpdate.Style = ProgressBarStyle.Marquee;
+            progressBarUpdate.TabIndex = 24;
+            progressBarUpdate.Visible = false;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -492,5 +517,7 @@
         private Label labelAddClassTitle;
         private Label labelClassPath;
         private Button btnSaveClass;
+        private Button btnUpdateClasses;
+        private ProgressBar progressBarUpdate;
     }
 }
