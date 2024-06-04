@@ -1,6 +1,14 @@
-﻿using JsonGenerator.Core;
+﻿using Json.More;
+using Json.Schema;
+using Json.Schema.Generation;
+using JsonGenerator.UI.Models;
+using JsonGenerator.UI.Models.EmrFormTemplatesSchema;
+using Newtonsoft.Json;
+using System.CodeDom.Compiler;
 using System.Configuration;
+using System.IO;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace JsonGenerator.UI
 {
@@ -12,15 +20,12 @@ namespace JsonGenerator.UI
 
         private string _desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-
-
-
+        public string _directory { get; set; }
 
         public MainForm()
         {
             InitializeComponent();
             tabControl.TabPages.Clear();
-
 
             _config.BaseDirectory = ConfigurationManager.AppSettings["BaseDirectory"];
             _config.BaseFolderName = ConfigurationManager.AppSettings["BaseFolderName"];
@@ -28,10 +33,12 @@ namespace JsonGenerator.UI
             _config.JsonsFolderName = ConfigurationManager.AppSettings["JsonsFolderName"];
             _config.SchemasFolderName = ConfigurationManager.AppSettings["SchemasFolderName"];
 
-
+            _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
 
             comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(_desktopPath, _config.BaseFolderName, _config.ClassesFolderName));
         }
+
+
 
         private List<string> GetTemplateNames(string folderPath)
         {
@@ -40,6 +47,8 @@ namespace JsonGenerator.UI
                 if (Directory.Exists(folderPath))
                 {
                     var di = new DirectoryInfo(folderPath);
+
+                    TemplateNames.Add(string.Empty);
 
                     foreach (FileInfo fi in di.GetFiles())
                     {
@@ -222,6 +231,90 @@ namespace JsonGenerator.UI
             ChangeSettingsValue("SchemasFolderName", textBoxSchemaName.Text);
             SaveSchemaFolderName.Enabled = false;
             SaveSchemaFolderName.BackColor = SystemColors.Window;
+        }
+
+        private void comboBoxTemplateNames_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (comboBoxTemplateNames.SelectedIndex == 0 || comboBoxTemplateNames.SelectedIndex == -1)
+            {
+                comboBoxTemplateNames.SelectedIndex = -1;
+                btnGeneretExample.Enabled = false;
+                btnGeneretSchema.Enabled = false;
+                btnGeneretExample.BackColor = SystemColors.Window;
+                btnGeneretSchema.BackColor = SystemColors.Window;
+            }
+            else
+            {
+                btnGeneretExample.Enabled = true;
+                btnGeneretSchema.Enabled = true;
+                btnGeneretExample.BackColor = Color.LightGreen;
+                btnGeneretSchema.BackColor = Color.LightGreen;
+            }
+
+            richTextBoxJsonExample.Text = string.Empty;
+            richTextBoxJsonExample.Visible = false;
+
+            richTextBoxJsonSchem.Text = string.Empty;
+            richTextBoxJsonSchem.Visible = false;
+        }
+
+        private void btnGeneretSchema_Click(object sender, EventArgs e)
+        {
+            var nameOfTheForm = nameof(OutpatientTreatmentProgramAdmissionAndFinancialAgreement);
+            _ = CreateFileForSchema<OutpatientTreatmentProgramAdmissionAndFinancialAgreement>(nameOfTheForm);
+
+            string CreateFileForSchema<TModel>(string fileName)
+            {
+                var schemaBuilder = new JsonSchemaBuilder();
+                var schema = schemaBuilder.FromType<TModel>().Build();
+                var schemaDoc = schema.ToJsonDocument();
+
+                var schemaFileName = Path.Combine(_directory, "Schemas", $"{fileName}_schema.json");
+
+                var rawText = schemaDoc.RootElement.GetRawText();
+
+                if (!Directory.Exists(Path.GetDirectoryName(schemaFileName)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(schemaFileName));
+
+                File.WriteAllText(schemaFileName, rawText);
+                richTextBoxJsonSchem.Text = rawText;
+                richTextBoxJsonSchem.Visible = true;
+                return rawText;
+            }
+
+            btnGeneretSchema.Enabled = false;
+            btnGeneretSchema.BackColor = SystemColors.Window;
+        }
+
+        private void btnGeneretExample_Click(object sender, EventArgs e)
+        {
+            var nameOfTheForm = nameof(OutpatientTreatmentProgramAdmissionAndFinancialAgreement);
+            _ = CreateFileForExampleJson<OutpatientTreatmentProgramAdmissionAndFinancialAgreement>(nameOfTheForm);
+
+
+            string CreateFileForExampleJson<TModel>(string fileName)
+            {
+                var fake = AutoBogus.AutoFaker.Generate<TModel>();
+                var fakeJson = JsonConvert.SerializeObject(fake, Formatting.Indented);
+                var jsonFileName = Path.Combine(_directory, "Jsons", $"{fileName}_example.json");
+
+                if (!Directory.Exists(Path.GetDirectoryName(jsonFileName)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(jsonFileName));
+
+                File.WriteAllText(jsonFileName, fakeJson);
+                richTextBoxJsonExample.Text = fakeJson;
+                richTextBoxJsonExample.Visible = true;
+                return fakeJson;
+            }
+
+            btnGeneretExample.Enabled = false;
+            btnGeneretExample.BackColor = SystemColors.Window;
+        }
+
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            About about = new About();
+            about.Show();
         }
     }
 }

@@ -10,11 +10,15 @@
 
   <ItemGroup>
     <Folder Include="Images\" />
+    <Folder Include="Models\EmrFormTemplatesSchema\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\JsonGenerator.Core\JsonGenerator.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoBogus" Version="2.13.1" />
+		<PackageReference Include="JsonSchema.Net" Version="6.0.7" />
+		<PackageReference Include="JsonSchema.Net.Generation" Version="4.3.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

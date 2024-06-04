@@ -31,16 +31,19 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             menuStrip = new MenuStrip();
-            մենյուToolStripMenuItem = new ToolStripMenuItem();
+            menuToolStripMenuItem = new ToolStripMenuItem();
             GeneralMenuItem = new ToolStripMenuItem();
             ConfigMenuItem = new ToolStripMenuItem();
-            HelpMenuItem = new ToolStripMenuItem();
-            ծրագրիՄասինToolStripMenuItem = new ToolStripMenuItem();
+            AboutToolStripMenuItem = new ToolStripMenuItem();
             ExitMenuItem = new ToolStripMenuItem();
             comboBoxTemplateNames = new ComboBox();
             label1 = new Label();
             tabControl = new TabControl();
             tabPageGeneral = new TabPage();
+            richTextBoxJsonSchem = new RichTextBox();
+            richTextBoxJsonExample = new RichTextBox();
+            btnGeneretSchema = new Button();
+            btnGeneretExample = new Button();
             tabPageConfig = new TabPage();
             SaveSchemaFolderName = new Button();
             SaveJsonFolderName = new Button();
@@ -71,66 +74,61 @@
             // menuStrip
             // 
             menuStrip.ImageScalingSize = new Size(20, 20);
-            menuStrip.Items.AddRange(new ToolStripItem[] { մենյուToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { menuToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(1741, 28);
             menuStrip.TabIndex = 2;
             menuStrip.Text = "Մենյու";
             // 
-            // մենյուToolStripMenuItem
+            // menuToolStripMenuItem
             // 
-            մենյուToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { GeneralMenuItem, ConfigMenuItem, HelpMenuItem, ծրագրիՄասինToolStripMenuItem, ExitMenuItem });
-            մենյուToolStripMenuItem.Name = "մենյուToolStripMenuItem";
-            մենյուToolStripMenuItem.Size = new Size(69, 24);
-            մենյուToolStripMenuItem.Text = "Մենյու";
+            menuToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { GeneralMenuItem, ConfigMenuItem, AboutToolStripMenuItem, ExitMenuItem });
+            menuToolStripMenuItem.Name = "menuToolStripMenuItem";
+            menuToolStripMenuItem.Size = new Size(69, 24);
+            menuToolStripMenuItem.Text = "Մենյու";
             // 
             // GeneralMenuItem
             // 
             GeneralMenuItem.Name = "GeneralMenuItem";
-            GeneralMenuItem.Size = new Size(218, 26);
+            GeneralMenuItem.Size = new Size(224, 26);
             GeneralMenuItem.Text = "Գլխավոր";
             GeneralMenuItem.Click += GeneralMenuItem_Click;
             // 
             // ConfigMenuItem
             // 
             ConfigMenuItem.Name = "ConfigMenuItem";
-            ConfigMenuItem.Size = new Size(218, 26);
+            ConfigMenuItem.Size = new Size(224, 26);
             ConfigMenuItem.Text = "Կարգավորումներ";
             ConfigMenuItem.Click += ConfigMenuItem_Click;
             // 
-            // HelpMenuItem
+            // AboutToolStripMenuItem
             // 
-            HelpMenuItem.Name = "HelpMenuItem";
-            HelpMenuItem.Size = new Size(218, 26);
-            HelpMenuItem.Text = "Օգնություն";
-            HelpMenuItem.Click += HelpMenuItem_Click;
-            // 
-            // ծրագրիՄասինToolStripMenuItem
-            // 
-            ծրագրիՄասինToolStripMenuItem.Name = "ծրագրիՄասինToolStripMenuItem";
-            ծրագրիՄասինToolStripMenuItem.Size = new Size(218, 26);
-            ծրագրիՄասինToolStripMenuItem.Text = "Ծրագրի մասին";
+            AboutToolStripMenuItem.Name = "AboutToolStripMenuItem";
+            AboutToolStripMenuItem.Size = new Size(224, 26);
+            AboutToolStripMenuItem.Text = "Ծրագրի մասին";
+            AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
             // 
             // ExitMenuItem
             // 
             ExitMenuItem.Name = "ExitMenuItem";
-            ExitMenuItem.Size = new Size(218, 26);
+            ExitMenuItem.Size = new Size(224, 26);
             ExitMenuItem.Text = "Ելք";
             ExitMenuItem.Click += ExitMenuItem_Click;
             // 
             // comboBoxTemplateNames
             // 
             comboBoxTemplateNames.FormattingEnabled = true;
-            comboBoxTemplateNames.Location = new Point(277, 36);
+            comboBoxTemplateNames.Location = new Point(732, 33);
             comboBoxTemplateNames.Name = "comboBoxTemplateNames";
-            comboBoxTemplateNames.Size = new Size(444, 28);
-            comboBoxTemplateNames.TabIndex = 1;
+            comboBoxTemplateNames.Size = new Size(514, 28);
+            comboBoxTemplateNames.TabIndex = 2;
+            comboBoxTemplateNames.SelectedValueChanged += comboBoxTemplateNames_SelectedValueChanged;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(51, 36);
+            label1.Location = new Point(506, 33);
             label1.Name = "label1";
             label1.Size = new Size(165, 20);
             label1.TabIndex = 0;
@@ -150,6 +148,10 @@
             // 
             // tabPageGeneral
             // 
+            tabPageGeneral.Controls.Add(richTextBoxJsonSchem);
+            tabPageGeneral.Controls.Add(richTextBoxJsonExample);
+            tabPageGeneral.Controls.Add(btnGeneretSchema);
+            tabPageGeneral.Controls.Add(btnGeneretExample);
             tabPageGeneral.Controls.Add(label1);
             tabPageGeneral.Controls.Add(comboBoxTemplateNames);
             tabPageGeneral.Location = new Point(4, 29);
@@ -159,6 +161,46 @@
             tabPageGeneral.TabIndex = 0;
             tabPageGeneral.Text = "Գլխավոր";
             tabPageGeneral.UseVisualStyleBackColor = true;
+            // 
+            // richTextBoxJsonSchem
+            // 
+            richTextBoxJsonSchem.Location = new Point(938, 167);
+            richTextBoxJsonSchem.Name = "richTextBoxJsonSchem";
+            richTextBoxJsonSchem.Size = new Size(749, 638);
+            richTextBoxJsonSchem.TabIndex = 5;
+            richTextBoxJsonSchem.Text = "";
+            richTextBoxJsonSchem.Visible = false;
+            // 
+            // richTextBoxJsonExample
+            // 
+            richTextBoxJsonExample.Location = new Point(51, 167);
+            richTextBoxJsonExample.Name = "richTextBoxJsonExample";
+            richTextBoxJsonExample.Size = new Size(749, 638);
+            richTextBoxJsonExample.TabIndex = 4;
+            richTextBoxJsonExample.Text = "";
+            richTextBoxJsonExample.Visible = false;
+            // 
+            // btnGeneretSchema
+            // 
+            btnGeneretSchema.Enabled = false;
+            btnGeneretSchema.Location = new Point(1191, 96);
+            btnGeneretSchema.Name = "btnGeneretSchema";
+            btnGeneretSchema.Size = new Size(238, 29);
+            btnGeneretSchema.TabIndex = 3;
+            btnGeneretSchema.Text = "Գեներացնել Json Schema";
+            btnGeneretSchema.UseVisualStyleBackColor = true;
+            btnGeneretSchema.Click += btnGeneretSchema_Click;
+            // 
+            // btnGeneretExample
+            // 
+            btnGeneretExample.Enabled = false;
+            btnGeneretExample.Location = new Point(277, 96);
+            btnGeneretExample.Name = "btnGeneretExample";
+            btnGeneretExample.Size = new Size(238, 29);
+            btnGeneretExample.TabIndex = 2;
+            btnGeneretExample.Text = "Գեներացնել Json Example";
+            btnGeneretExample.UseVisualStyleBackColor = true;
+            btnGeneretExample.Click += btnGeneretExample_Click;
             // 
             // tabPageConfig
             // 
@@ -372,9 +414,8 @@
 
         #endregion
         private MenuStrip menuStrip;
-        private ToolStripMenuItem մենյուToolStripMenuItem;
+        private ToolStripMenuItem menuToolStripMenuItem;
         private ToolStripMenuItem ConfigMenuItem;
-        private ToolStripMenuItem HelpMenuItem;
         private ToolStripMenuItem ExitMenuItem;
         private ToolStripMenuItem GeneralMenuItem;
         private ComboBox comboBoxTemplateNames;
@@ -385,7 +426,7 @@
         private TabPage tabPageHelp;
         private Label label2;
         private Label label3;
-        private ToolStripMenuItem ծրագրիՄասինToolStripMenuItem;
+        private ToolStripMenuItem AboutToolStripMenuItem;
         private TextBox textBoxBaseDirectory;
         private Button saveBaseDirectory;
         private Label label6;
@@ -401,5 +442,9 @@
         private TextBox textBoxJsonName;
         private TextBox textBoxClassName;
         private TextBox textBoxBaseFolderName;
+        private Button btnGeneretExample;
+        private Button btnGeneretSchema;
+        private RichTextBox richTextBoxJsonExample;
+        private RichTextBox richTextBoxJsonSchem;
     }
 }
