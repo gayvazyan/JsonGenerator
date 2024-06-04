@@ -45,29 +45,31 @@
             btnGeneretSchema = new Button();
             btnGeneretExample = new Button();
             tabPageConfig = new TabPage();
+            btnSaveClass = new Button();
+            labelClassPath = new Label();
+            labelAddClassTitle = new Label();
+            progressBarClassCopy = new ProgressBar();
+            btnAddNewClass = new Button();
+            btnInsertDefoultClasses = new Button();
+            btnSetDefultConfigs = new Button();
+            btnDeleteAllConfig = new Button();
             SaveSchemaFolderName = new Button();
             SaveJsonFolderName = new Button();
-            SaveClassFolderName = new Button();
             textBoxSchemaName = new TextBox();
             textBoxJsonName = new TextBox();
-            textBoxClassName = new TextBox();
             textBoxBaseFolderName = new TextBox();
-            label7 = new Label();
+            labelJsonSchemaFolder = new Label();
             label6 = new Label();
-            label5 = new Label();
             label4 = new Label();
             SaveBaseFolderName = new Button();
             saveBaseDirectory = new Button();
             textBoxBaseDirectory = new TextBox();
             label2 = new Label();
-            tabPageHelp = new TabPage();
-            label3 = new Label();
             bindingSource1 = new BindingSource(components);
             menuStrip.SuspendLayout();
             tabControl.SuspendLayout();
             tabPageGeneral.SuspendLayout();
             tabPageConfig.SuspendLayout();
-            tabPageHelp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
             SuspendLayout();
             // 
@@ -91,28 +93,28 @@
             // GeneralMenuItem
             // 
             GeneralMenuItem.Name = "GeneralMenuItem";
-            GeneralMenuItem.Size = new Size(224, 26);
+            GeneralMenuItem.Size = new Size(218, 26);
             GeneralMenuItem.Text = "Գլխավոր";
             GeneralMenuItem.Click += GeneralMenuItem_Click;
             // 
             // ConfigMenuItem
             // 
             ConfigMenuItem.Name = "ConfigMenuItem";
-            ConfigMenuItem.Size = new Size(224, 26);
+            ConfigMenuItem.Size = new Size(218, 26);
             ConfigMenuItem.Text = "Կարգավորումներ";
             ConfigMenuItem.Click += ConfigMenuItem_Click;
             // 
             // AboutToolStripMenuItem
             // 
             AboutToolStripMenuItem.Name = "AboutToolStripMenuItem";
-            AboutToolStripMenuItem.Size = new Size(224, 26);
+            AboutToolStripMenuItem.Size = new Size(218, 26);
             AboutToolStripMenuItem.Text = "Ծրագրի մասին";
             AboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
             // 
             // ExitMenuItem
             // 
             ExitMenuItem.Name = "ExitMenuItem";
-            ExitMenuItem.Size = new Size(224, 26);
+            ExitMenuItem.Size = new Size(218, 26);
             ExitMenuItem.Text = "Ելք";
             ExitMenuItem.Click += ExitMenuItem_Click;
             // 
@@ -138,7 +140,6 @@
             // 
             tabControl.Controls.Add(tabPageGeneral);
             tabControl.Controls.Add(tabPageConfig);
-            tabControl.Controls.Add(tabPageHelp);
             tabControl.Dock = DockStyle.Fill;
             tabControl.Location = new Point(0, 28);
             tabControl.Name = "tabControl";
@@ -204,16 +205,21 @@
             // 
             // tabPageConfig
             // 
+            tabPageConfig.Controls.Add(btnSaveClass);
+            tabPageConfig.Controls.Add(labelClassPath);
+            tabPageConfig.Controls.Add(labelAddClassTitle);
+            tabPageConfig.Controls.Add(progressBarClassCopy);
+            tabPageConfig.Controls.Add(btnAddNewClass);
+            tabPageConfig.Controls.Add(btnInsertDefoultClasses);
+            tabPageConfig.Controls.Add(btnSetDefultConfigs);
+            tabPageConfig.Controls.Add(btnDeleteAllConfig);
             tabPageConfig.Controls.Add(SaveSchemaFolderName);
             tabPageConfig.Controls.Add(SaveJsonFolderName);
-            tabPageConfig.Controls.Add(SaveClassFolderName);
             tabPageConfig.Controls.Add(textBoxSchemaName);
             tabPageConfig.Controls.Add(textBoxJsonName);
-            tabPageConfig.Controls.Add(textBoxClassName);
             tabPageConfig.Controls.Add(textBoxBaseFolderName);
-            tabPageConfig.Controls.Add(label7);
+            tabPageConfig.Controls.Add(labelJsonSchemaFolder);
             tabPageConfig.Controls.Add(label6);
-            tabPageConfig.Controls.Add(label5);
             tabPageConfig.Controls.Add(label4);
             tabPageConfig.Controls.Add(SaveBaseFolderName);
             tabPageConfig.Controls.Add(saveBaseDirectory);
@@ -227,10 +233,96 @@
             tabPageConfig.Text = "Կարգավորումներ";
             tabPageConfig.UseVisualStyleBackColor = true;
             // 
+            // btnSaveClass
+            // 
+            btnSaveClass.BackColor = Color.Transparent;
+            btnSaveClass.Enabled = false;
+            btnSaveClass.Location = new Point(654, 406);
+            btnSaveClass.Name = "btnSaveClass";
+            btnSaveClass.Size = new Size(248, 59);
+            btnSaveClass.TabIndex = 22;
+            btnSaveClass.Text = "Պահպանել Class-ի ֆայլը";
+            btnSaveClass.UseVisualStyleBackColor = false;
+            btnSaveClass.Click += btnSaveClass_Click;
+            // 
+            // labelClassPath
+            // 
+            labelClassPath.AutoSize = true;
+            labelClassPath.Location = new Point(326, 487);
+            labelClassPath.Name = "labelClassPath";
+            labelClassPath.Size = new Size(0, 20);
+            labelClassPath.TabIndex = 21;
+            // 
+            // labelAddClassTitle
+            // 
+            labelAddClassTitle.AutoSize = true;
+            labelAddClassTitle.Font = new Font("Segoe UI", 16.2F, FontStyle.Regular, GraphicsUnit.Point);
+            labelAddClassTitle.Location = new Point(637, 341);
+            labelAddClassTitle.Name = "labelAddClassTitle";
+            labelAddClassTitle.Size = new Size(288, 38);
+            labelAddClassTitle.TabIndex = 20;
+            labelAddClassTitle.Text = "Ավելացնել նոր Class";
+            // 
+            // progressBarClassCopy
+            // 
+            progressBarClassCopy.Location = new Point(326, 540);
+            progressBarClassCopy.MarqueeAnimationSpeed = 30;
+            progressBarClassCopy.Name = "progressBarClassCopy";
+            progressBarClassCopy.Size = new Size(886, 29);
+            progressBarClassCopy.Step = 50;
+            progressBarClassCopy.Style = ProgressBarStyle.Marquee;
+            progressBarClassCopy.TabIndex = 10;
+            progressBarClassCopy.Visible = false;
+            // 
+            // btnAddNewClass
+            // 
+            btnAddNewClass.BackColor = Color.LightCyan;
+            btnAddNewClass.Location = new Point(326, 406);
+            btnAddNewClass.Name = "btnAddNewClass";
+            btnAddNewClass.Size = new Size(248, 59);
+            btnAddNewClass.TabIndex = 19;
+            btnAddNewClass.Text = "Կցել նոր Class";
+            btnAddNewClass.UseVisualStyleBackColor = false;
+            btnAddNewClass.Click += btnAddNewClass_Click;
+            // 
+            // btnInsertDefoultClasses
+            // 
+            btnInsertDefoultClasses.BackColor = Color.Transparent;
+            btnInsertDefoultClasses.Enabled = false;
+            btnInsertDefoultClasses.Location = new Point(964, 406);
+            btnInsertDefoultClasses.Name = "btnInsertDefoultClasses";
+            btnInsertDefoultClasses.Size = new Size(248, 59);
+            btnInsertDefoultClasses.TabIndex = 18;
+            btnInsertDefoultClasses.Text = "Թարմացնել Class-ների ցուցակը";
+            btnInsertDefoultClasses.UseVisualStyleBackColor = false;
+            btnInsertDefoultClasses.Click += btnInsertDefoultClasses_Click;
+            // 
+            // btnSetDefultConfigs
+            // 
+            btnSetDefultConfigs.BackColor = Color.LawnGreen;
+            btnSetDefultConfigs.Location = new Point(443, 240);
+            btnSetDefultConfigs.Name = "btnSetDefultConfigs";
+            btnSetDefultConfigs.Size = new Size(307, 59);
+            btnSetDefultConfigs.TabIndex = 17;
+            btnSetDefultConfigs.Text = "Տեղադրել ստանդարտ կարգավորումներ";
+            btnSetDefultConfigs.UseVisualStyleBackColor = false;
+            btnSetDefultConfigs.Click += btnSetDefultConfigs_Click;
+            // 
+            // btnDeleteAllConfig
+            // 
+            btnDeleteAllConfig.BackColor = Color.Red;
+            btnDeleteAllConfig.Location = new Point(782, 241);
+            btnDeleteAllConfig.Name = "btnDeleteAllConfig";
+            btnDeleteAllConfig.Size = new Size(294, 59);
+            btnDeleteAllConfig.TabIndex = 16;
+            btnDeleteAllConfig.Text = "Ջնջել բոլոր կարգավորումները";
+            btnDeleteAllConfig.UseVisualStyleBackColor = false;
+            btnDeleteAllConfig.Click += btnDeleteAllConfig_Click;
+            // 
             // SaveSchemaFolderName
             // 
             SaveSchemaFolderName.Enabled = false;
-            SaveSchemaFolderName.Location = new Point(1227, 196);
+            SaveSchemaFolderName.Location = new Point(1227, 160);
             SaveSchemaFolderName.Name = "SaveSchemaFolderName";
             SaveSchemaFolderName.Size = new Size(127, 29);
             SaveSchemaFolderName.TabIndex = 15;
@@ -241,7 +333,7 @@
             // SaveJsonFolderName
             // 
             SaveJsonFolderName.Enabled = false;
-            SaveJsonFolderName.Location = new Point(1227, 155);
+            SaveJsonFolderName.Location = new Point(1227, 119);
             SaveJsonFolderName.Name = "SaveJsonFolderName";
             SaveJsonFolderName.Size = new Size(127, 29);
             SaveJsonFolderName.TabIndex = 14;
@@ -249,20 +341,9 @@
             SaveJsonFolderName.UseVisualStyleBackColor = true;
             SaveJsonFolderName.Click += SaveJsonFolderName_Click;
             // 
-            // SaveClassFolderName
-            // 
-            SaveClassFolderName.Enabled = false;
-            SaveClassFolderName.Location = new Point(1227, 115);
-            SaveClassFolderName.Name = "SaveClassFolderName";
-            SaveClassFolderName.Size = new Size(127, 29);
-            SaveClassFolderName.TabIndex = 13;
-            SaveClassFolderName.Text = "Պահպանել";
-            SaveClassFolderName.UseVisualStyleBackColor = true;
-            SaveClassFolderName.Click += SaveClassFolderName_Click;
-            // 
             // textBoxSchemaName
             // 
-            textBoxSchemaName.Location = new Point(326, 193);
+            textBoxSchemaName.Location = new Point(326, 157);
             textBoxSchemaName.Name = "textBoxSchemaName";
             textBoxSchemaName.Size = new Size(886, 27);
             textBoxSchemaName.TabIndex = 12;
@@ -270,19 +351,11 @@
             // 
             // textBoxJsonName
             // 
-            textBoxJsonName.Location = new Point(326, 155);
+            textBoxJsonName.Location = new Point(326, 119);
             textBoxJsonName.Name = "textBoxJsonName";
             textBoxJsonName.Size = new Size(886, 27);
             textBoxJsonName.TabIndex = 11;
             textBoxJsonName.KeyPress += textBoxJsonName_KeyPress;
-            // 
-            // textBoxClassName
-            // 
-            textBoxClassName.Location = new Point(326, 115);
-            textBoxClassName.Name = "textBoxClassName";
-            textBoxClassName.Size = new Size(886, 27);
-            textBoxClassName.TabIndex = 10;
-            textBoxClassName.KeyPress += textBoxClassName_KeyPress;
             // 
             // textBoxBaseFolderName
             // 
@@ -292,32 +365,23 @@
             textBoxBaseFolderName.TabIndex = 9;
             textBoxBaseFolderName.KeyPress += textBoxBaseFolderName_KeyPress;
             // 
-            // label7
+            // labelJsonSchemaFolder
             // 
-            label7.AutoSize = true;
-            label7.Location = new Point(43, 196);
-            label7.Name = "label7";
-            label7.Size = new Size(248, 20);
-            label7.TabIndex = 7;
-            label7.Text = "Schema-ների Folder-ի անվանումը";
+            labelJsonSchemaFolder.AutoSize = true;
+            labelJsonSchemaFolder.Location = new Point(43, 160);
+            labelJsonSchemaFolder.Name = "labelJsonSchemaFolder";
+            labelJsonSchemaFolder.Size = new Size(280, 20);
+            labelJsonSchemaFolder.TabIndex = 7;
+            labelJsonSchemaFolder.Text = "Json Schema-ների Folder-ի անվանումը";
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(43, 155);
+            label6.Location = new Point(43, 119);
             label6.Name = "label6";
-            label6.Size = new Size(224, 20);
+            label6.Size = new Size(285, 20);
             label6.TabIndex = 6;
-            label6.Text = "Json-ների Folder-ի անվանումը";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(43, 115);
-            label5.Name = "label5";
-            label5.Size = new Size(229, 20);
-            label5.TabIndex = 5;
-            label5.Text = "Class-ների Folder-ի անվանումը";
+            label6.Text = "Json Example-ների Folder-ի անվանումը";
             // 
             // label4
             // 
@@ -367,25 +431,6 @@
             label2.TabIndex = 0;
             label2.Text = "Գլխավոր directory-ի անվանումը";
             // 
-            // tabPageHelp
-            // 
-            tabPageHelp.Controls.Add(label3);
-            tabPageHelp.Location = new Point(4, 29);
-            tabPageHelp.Name = "tabPageHelp";
-            tabPageHelp.Size = new Size(1733, 837);
-            tabPageHelp.TabIndex = 2;
-            tabPageHelp.Text = "Օգնություն";
-            tabPageHelp.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(599, 335);
-            label3.Name = "label3";
-            label3.Size = new Size(89, 20);
-            label3.TabIndex = 0;
-            label3.Text = "Օգնություն";
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -405,8 +450,6 @@
             tabPageGeneral.PerformLayout();
             tabPageConfig.ResumeLayout(false);
             tabPageConfig.PerformLayout();
-            tabPageHelp.ResumeLayout(false);
-            tabPageHelp.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -423,28 +466,31 @@
         private TabControl tabControl;
         private TabPage tabPageGeneral;
         private TabPage tabPageConfig;
-        private TabPage tabPageHelp;
         private Label label2;
-        private Label label3;
         private ToolStripMenuItem AboutToolStripMenuItem;
         private TextBox textBoxBaseDirectory;
         private Button saveBaseDirectory;
         private Label label6;
-        private Label label5;
         private Label label4;
         private Button SaveBaseFolderName;
         private BindingSource bindingSource1;
-        private Label label7;
+        private Label labelJsonSchemaFolder;
         private Button SaveSchemaFolderName;
         private Button SaveJsonFolderName;
-        private Button SaveClassFolderName;
         private TextBox textBoxSchemaName;
         private TextBox textBoxJsonName;
-        private TextBox textBoxClassName;
         private TextBox textBoxBaseFolderName;
         private Button btnGeneretExample;
         private Button btnGeneretSchema;
         private RichTextBox richTextBoxJsonExample;
         private RichTextBox richTextBoxJsonSchem;
+        private Button btnSetDefultConfigs;
+        private Button btnDeleteAllConfig;
+        private Button btnInsertDefoultClasses;
+        private Button btnAddNewClass;
+        private ProgressBar progressBarClassCopy;
+        private Label labelAddClassTitle;
+        private Label labelClassPath;
+        private Button btnSaveClass;
     }
 }
