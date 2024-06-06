@@ -40,12 +40,16 @@
             label1 = new Label();
             tabControl = new TabControl();
             tabPageGeneral = new TabPage();
+            progressBarInsert = new ProgressBar();
+            btnSave = new Button();
+            checkBoxInsert = new CheckBox();
+            btnInsertClasses = new Button();
+            labelInsertClassesPath = new Label();
             richTextBoxJsonSchem = new RichTextBox();
             richTextBoxJsonExample = new RichTextBox();
             btnGeneretSchema = new Button();
             btnGeneretExample = new Button();
             tabPageConfig = new TabPage();
-            btnUpdateClasses = new Button();
             btnSaveClass = new Button();
             labelClassPath = new Label();
             labelAddClassTitle = new Label();
@@ -67,7 +71,6 @@
             textBoxBaseDirectory = new TextBox();
             label2 = new Label();
             bindingSource1 = new BindingSource(components);
-            progressBarUpdate = new ProgressBar();
             menuStrip.SuspendLayout();
             tabControl.SuspendLayout();
             tabPageGeneral.SuspendLayout();
@@ -123,7 +126,7 @@
             // comboBoxTemplateNames
             // 
             comboBoxTemplateNames.FormattingEnabled = true;
-            comboBoxTemplateNames.Location = new Point(732, 33);
+            comboBoxTemplateNames.Location = new Point(723, 46);
             comboBoxTemplateNames.Name = "comboBoxTemplateNames";
             comboBoxTemplateNames.Size = new Size(514, 28);
             comboBoxTemplateNames.TabIndex = 2;
@@ -132,7 +135,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(506, 33);
+            label1.Location = new Point(497, 46);
             label1.Name = "label1";
             label1.Size = new Size(165, 20);
             label1.TabIndex = 0;
@@ -151,6 +154,11 @@
             // 
             // tabPageGeneral
             // 
+            tabPageGeneral.Controls.Add(progressBarInsert);
+            tabPageGeneral.Controls.Add(btnSave);
+            tabPageGeneral.Controls.Add(checkBoxInsert);
+            tabPageGeneral.Controls.Add(btnInsertClasses);
+            tabPageGeneral.Controls.Add(labelInsertClassesPath);
             tabPageGeneral.Controls.Add(richTextBoxJsonSchem);
             tabPageGeneral.Controls.Add(richTextBoxJsonExample);
             tabPageGeneral.Controls.Add(btnGeneretSchema);
@@ -165,30 +173,84 @@
             tabPageGeneral.Text = "Գլխավոր";
             tabPageGeneral.UseVisualStyleBackColor = true;
             // 
+            // progressBarInsert
+            // 
+            progressBarInsert.Location = new Point(84, 773);
+            progressBarInsert.MarqueeAnimationSpeed = 30;
+            progressBarInsert.Name = "progressBarInsert";
+            progressBarInsert.Size = new Size(1594, 29);
+            progressBarInsert.Step = 50;
+            progressBarInsert.Style = ProgressBarStyle.Marquee;
+            progressBarInsert.TabIndex = 24;
+            progressBarInsert.Visible = false;
+            // 
+            // btnSave
+            // 
+            btnSave.BackColor = Color.Transparent;
+            btnSave.Enabled = false;
+            btnSave.Location = new Point(344, 686);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(248, 51);
+            btnSave.TabIndex = 23;
+            btnSave.Text = "Պահպանել ֆայլերը";
+            btnSave.UseVisualStyleBackColor = false;
+            btnSave.Visible = false;
+            btnSave.Click += btnSave_Click;
+            // 
+            // checkBoxInsert
+            // 
+            checkBoxInsert.AutoSize = true;
+            checkBoxInsert.Location = new Point(84, 649);
+            checkBoxInsert.Name = "checkBoxInsert";
+            checkBoxInsert.Size = new Size(376, 24);
+            checkBoxInsert.TabIndex = 8;
+            checkBoxInsert.Text = "Ցանկանում եմ ներբեռնել ստանդարտ Class-ները";
+            checkBoxInsert.UseVisualStyleBackColor = true;
+            checkBoxInsert.CheckedChanged += checkBoxInsert_CheckedChanged;
+            // 
+            // btnInsertClasses
+            // 
+            btnInsertClasses.BackColor = Color.PeachPuff;
+            btnInsertClasses.Location = new Point(84, 686);
+            btnInsertClasses.Name = "btnInsertClasses";
+            btnInsertClasses.Size = new Size(238, 51);
+            btnInsertClasses.TabIndex = 7;
+            btnInsertClasses.Text = "Ընտրեք Class-ների folder-ը";
+            btnInsertClasses.UseVisualStyleBackColor = false;
+            btnInsertClasses.Visible = false;
+            btnInsertClasses.Click += btnInsertClasses_Click;
+            // 
+            // labelInsertClassesPath
+            // 
+            labelInsertClassesPath.AutoSize = true;
+            labelInsertClassesPath.Location = new Point(624, 701);
+            labelInsertClassesPath.Name = "labelInsertClassesPath";
+            labelInsertClassesPath.Size = new Size(0, 20);
+            labelInsertClassesPath.TabIndex = 6;
+            labelInsertClassesPath.Visible = false;
+            // 
             // richTextBoxJsonSchem
             // 
-            richTextBoxJsonSchem.Location = new Point(938, 167);
+            richTextBoxJsonSchem.Location = new Point(929, 180);
             richTextBoxJsonSchem.Name = "richTextBoxJsonSchem";
-            richTextBoxJsonSchem.Size = new Size(749, 638);
+            richTextBoxJsonSchem.Size = new Size(749, 447);
             richTextBoxJsonSchem.TabIndex = 5;
             richTextBoxJsonSchem.Text = "";
-            richTextBoxJsonSchem.Visible = false;
             // 
             // richTextBoxJsonExample
             // 
-            richTextBoxJsonExample.Location = new Point(51, 167);
+            richTextBoxJsonExample.Location = new Point(84, 180);
             richTextBoxJsonExample.Name = "richTextBoxJsonExample";
-            richTextBoxJsonExample.Size = new Size(749, 638);
+            richTextBoxJsonExample.Size = new Size(749, 447);
             richTextBoxJsonExample.TabIndex = 4;
             richTextBoxJsonExample.Text = "";
-            richTextBoxJsonExample.Visible = false;
             // 
             // btnGeneretSchema
             // 
             btnGeneretSchema.Enabled = false;
-            btnGeneretSchema.Location = new Point(1191, 96);
+            btnGeneretSchema.Location = new Point(1182, 95);
             btnGeneretSchema.Name = "btnGeneretSchema";
-            btnGeneretSchema.Size = new Size(238, 29);
+            btnGeneretSchema.Size = new Size(238, 43);
             btnGeneretSchema.TabIndex = 3;
             btnGeneretSchema.Text = "Գեներացնել Json Schema";
             btnGeneretSchema.UseVisualStyleBackColor = true;
@@ -197,9 +259,9 @@
             // btnGeneretExample
             // 
             btnGeneretExample.Enabled = false;
-            btnGeneretExample.Location = new Point(277, 96);
+            btnGeneretExample.Location = new Point(268, 95);
             btnGeneretExample.Name = "btnGeneretExample";
-            btnGeneretExample.Size = new Size(238, 29);
+            btnGeneretExample.Size = new Size(238, 43);
             btnGeneretExample.TabIndex = 2;
             btnGeneretExample.Text = "Գեներացնել Json Example";
             btnGeneretExample.UseVisualStyleBackColor = true;
@@ -207,8 +269,6 @@
             // 
             // tabPageConfig
             // 
-            tabPageConfig.Controls.Add(progressBarUpdate);
-            tabPageConfig.Controls.Add(btnUpdateClasses);
             tabPageConfig.Controls.Add(btnSaveClass);
             tabPageConfig.Controls.Add(labelClassPath);
             tabPageConfig.Controls.Add(labelAddClassTitle);
@@ -236,16 +296,6 @@
             tabPageConfig.TabIndex = 1;
             tabPageConfig.Text = "Կարգավորումներ";
             tabPageConfig.UseVisualStyleBackColor = true;
-            // 
-            // btnUpdateClasses
-            // 
-            btnUpdateClasses.BackColor = Color.DeepSkyBlue;
-            btnUpdateClasses.Location = new Point(984, 233);
-            btnUpdateClasses.Name = "btnUpdateClasses";
-            btnUpdateClasses.Size = new Size(294, 59);
-            btnUpdateClasses.TabIndex = 23;
-            btnUpdateClasses.Text = "Թարմացնել Class-ները";
-            btnUpdateClasses.UseVisualStyleBackColor = false;
             // 
             // btnSaveClass
             // 
@@ -314,7 +364,7 @@
             // btnSetDefultConfigs
             // 
             btnSetDefultConfigs.BackColor = Color.LawnGreen;
-            btnSetDefultConfigs.Location = new Point(326, 232);
+            btnSetDefultConfigs.Location = new Point(473, 225);
             btnSetDefultConfigs.Name = "btnSetDefultConfigs";
             btnSetDefultConfigs.Size = new Size(307, 59);
             btnSetDefultConfigs.TabIndex = 17;
@@ -325,7 +375,7 @@
             // btnDeleteAllConfig
             // 
             btnDeleteAllConfig.BackColor = Color.Red;
-            btnDeleteAllConfig.Location = new Point(665, 233);
+            btnDeleteAllConfig.Location = new Point(801, 225);
             btnDeleteAllConfig.Name = "btnDeleteAllConfig";
             btnDeleteAllConfig.Size = new Size(294, 59);
             btnDeleteAllConfig.TabIndex = 16;
@@ -445,17 +495,6 @@
             label2.TabIndex = 0;
             label2.Text = "Գլխավոր directory-ի անվանումը";
             // 
-            // progressBarUpdate
-            // 
-            progressBarUpdate.Location = new Point(335, 336);
-            progressBarUpdate.MarqueeAnimationSpeed = 30;
-            progressBarUpdate.Name = "progressBarUpdate";
-            progressBarUpdate.Size = new Size(886, 29);
-            progressBarUpdate.Step = 50;
-            progressBarUpdate.Style = ProgressBarStyle.Marquee;
-            progressBarUpdate.TabIndex = 24;
-            progressBarUpdate.Visible = false;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -465,6 +504,7 @@
             Controls.Add(menuStrip);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip;
+            MaximizeBox = false;
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Json Generator";
@@ -517,7 +557,10 @@
         private Label labelAddClassTitle;
         private Label labelClassPath;
         private Button btnSaveClass;
-        private Button btnUpdateClasses;
-        private ProgressBar progressBarUpdate;
+        private Button btnInsertClasses;
+        private Label labelInsertClassesPath;
+        private CheckBox checkBoxInsert;
+        private Button btnSave;
+        private ProgressBar progressBarInsert;
     }
 }

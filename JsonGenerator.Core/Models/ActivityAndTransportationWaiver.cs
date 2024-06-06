@@ -2,9 +2,9 @@
 
 namespace JsonGenerator.UI.Models.EmrFormTemplatesSchema;
 
-[Title(nameof(AAABBB))]
-[Description(nameof(AAABBB))]
-public class AAABBB
+[Title(nameof(ActivityAndTransportationWaiver))]
+[Description(nameof(ActivityAndTransportationWaiver))]
+public class ActivityAndTransportationWaiver
 {
     [Required]
     public string CompanyName { get; set; }

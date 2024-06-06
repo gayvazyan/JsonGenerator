@@ -2,13 +2,9 @@
 using Json.Schema;
 using Json.Schema.Generation;
 using JsonGenerator.UI.Models;
-using JsonGenerator.UI.Models.EmrFormTemplatesSchema;
 using Newtonsoft.Json;
-using System;
-using System.CodeDom.Compiler;
+using System.ComponentModel;
 using System.Configuration;
-using System.IO;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace JsonGenerator.UI
@@ -16,12 +12,13 @@ namespace JsonGenerator.UI
     public partial class MainForm : Form
     {
 
-        public List<string> TemplateNames { get; set; } = new List<string>();
+        public BindingList<string> TemplateNames { get; set; } = new BindingList<string>();
         private ConfigModel _config { get; set; } = new ConfigModel();
 
         private string _desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         public string _directory { get; set; }
         public string _className { get; set; } = string.Empty;
+        public string _projectRoot { get; set; } = string.Empty;
 
         public Assembly[] Assamblies { get; set; } = AppDomain.CurrentDomain.GetAssemblies();
 
@@ -36,6 +33,7 @@ namespace JsonGenerator.UI
             _config.JsonSchemasFolderName = ConfigurationManager.AppSettings["JsonSchemasFolderName"];
 
             _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
+            // _projectRoot = Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.FullName ?? string.Empty;
         }
 
         private void comboBoxTemplateNames_SelectedValueChanged(object sender, EventArgs e)
@@ -66,16 +64,16 @@ namespace JsonGenerator.UI
                 _className = comboBoxTemplateNames?.SelectedValue?.ToString() ?? string.Empty;
 
         }
-        private List<string> GetTemplateNames(string folderPath)
+        private BindingList<string> GetTemplateNames(string folderPath)
         {
             try
             {
+
                 if (Directory.Exists(folderPath))
                 {
-                    var di = new DirectoryInfo(folderPath);
-
+                    TemplateNames.Clear();
                     TemplateNames.Add(string.Empty);
-
+                    var di = new DirectoryInfo(folderPath);
                     foreach (FileInfo fi in di.GetFiles())
                     {
                         if (fi.Exists && string.Equals(fi.Extension, ".cs"))
@@ -86,7 +84,7 @@ namespace JsonGenerator.UI
                     }
                 }
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException)
             {
                 // Log detailed information or show a message to the user
                 MessageBox.Show($"Access to the path '{folderPath}' is denied. Please check your permissions.", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -121,10 +119,11 @@ namespace JsonGenerator.UI
         }
         private void GeneralMenuItem_Click(object sender, EventArgs e)
         {
-            var projectRoot = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
 
-            comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(_directory, "Classes"));
-            //comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(projectRoot.Remove(projectRoot.Length - 3), "Models", "EmrFormTemplatesSchema"));
+            comboBoxTemplateNames.DataSource = null;
+           comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(_directory, "Classes"));
+            //comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(_projectRoot, "Models", "EmrFormTemplatesSchema"));
 
             if (!tabControl.TabPages.Contains(tabPageGeneral))
                 tabControl.TabPages.Add(tabPageGeneral);
@@ -138,8 +137,9 @@ namespace JsonGenerator.UI
         }
         private void ChangeSettingsValue(string key, string newValue)
         {
-            var projectRoot = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            string configFilePath = Path.Combine(projectRoot.Remove(projectRoot.Length - 3), "App.config");
+            _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
+
+            string configFilePath = Path.Combine(_directory, "Configs", "App.config");
 
             // Load the configuration file
             ExeConfigurationFileMap configFileMap = new ExeConfigurationFileMap();
@@ -266,7 +266,12 @@ namespace JsonGenerator.UI
             var schema = schemaBuilder.FromType(modelType).Build();
             var schemaDoc = schema.ToJsonDocument();
 
+            _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
+
             var schemaFileName = Path.Combine(_directory, _config.JsonSchemasFolderName ?? string.Empty, $"{fileName}_schema.json");
+
+            if (!Directory.Exists(Path.GetDirectoryName(schemaFileName)))
+                Directory.CreateDirectory(Path.GetDirectoryName(schemaFileName) ?? string.Empty);
 
             var rawText = schemaDoc.RootElement.GetRawText();
             File.WriteAllText(schemaFileName, rawText);
@@ -294,10 +299,13 @@ namespace JsonGenerator.UI
         {
             var fake = AutoBogus.AutoFaker.Generate<TModel>();
             var fakeJson = JsonConvert.SerializeObject(fake, Formatting.Indented);
+
+            _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
+
             var jsonFileName = Path.Combine(_directory, _config.JsonExampleFolderName ?? string.Empty, $"{fileName}_example.json");
 
             if (!Directory.Exists(Path.GetDirectoryName(jsonFileName)))
-                Directory.CreateDirectory(Path.GetDirectoryName(jsonFileName));
+                Directory.CreateDirectory(Path.GetDirectoryName(jsonFileName) ?? string.Empty);
 
             File.WriteAllText(jsonFileName, fakeJson);
             richTextBoxJsonExample.Text = fakeJson;
@@ -338,36 +346,40 @@ namespace JsonGenerator.UI
         }
         private void btnInsertDefoultClasses_Click(object sender, EventArgs e)
         {
+            _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
+
             string sourceDirectory = Path.Combine(_directory, "Classes");
-           
+
             Assamblies = AppDomain.CurrentDomain.GetAssemblies();
-            
+
             progressBarClassCopy.Visible = true;
 
             if (!Directory.Exists(sourceDirectory))
                 Directory.CreateDirectory(sourceDirectory);
 
             var di = new DirectoryInfo(sourceDirectory);
-                TemplateNames.Clear();
-                TemplateNames.Add(string.Empty);
+            TemplateNames.Clear();
+            TemplateNames.Add(string.Empty);
 
-                foreach (FileInfo fi in di.GetFiles())
+            foreach (FileInfo fi in di.GetFiles())
+            {
+                if (fi.Exists && string.Equals(fi.Extension, ".cs"))
                 {
-                    if (fi.Exists && string.Equals(fi.Extension, ".cs"))
-                    {
 
-                        Application.DoEvents();
-                        Thread.Sleep(200);
+                    Application.DoEvents();
+                    Thread.Sleep(200);
 
-                        string className = fi.Name;
-                        TemplateNames.Add(className.Remove(className.Length - 3));
-                    }
+                    string className = fi.Name;
+                    TemplateNames.Add(className.Remove(className.Length - 3));
                 }
-           
+            }
 
             progressBarClassCopy.Visible = false;
 
-            comboBoxTemplateNames.DataSource = TemplateNames;
+            _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
+
+            comboBoxTemplateNames.DataSource = null;
+            comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(_directory, "Classes"));
 
             btnInsertDefoultClasses.Enabled = false;
             btnInsertDefoultClasses.BackColor = Color.Transparent;
@@ -392,14 +404,16 @@ namespace JsonGenerator.UI
         private void btnSaveClass_Click(object sender, EventArgs e)
         {
             string filePath = labelClassPath.Text;
+            _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
 
             // Construct the destination file path
-             string destinationFilePath = Path.Combine(_directory, "Classes");
+            string destinationDirectory = Path.Combine(_directory, "Classes");
 
-            if (!Directory.Exists(destinationFilePath))
-                Directory.CreateDirectory(destinationFilePath);
+            if (!Directory.Exists(destinationDirectory))
+                Directory.CreateDirectory(destinationDirectory);
 
             // Copy the file to the destination directory
+            string destinationFilePath = Path.Combine(destinationDirectory, Path.GetFileName(filePath));
             File.Copy(filePath, destinationFilePath, true); // Overwrite if the file already exists
 
             btnSaveClass.Enabled = false;
@@ -408,21 +422,58 @@ namespace JsonGenerator.UI
             MessageBox.Show("Գործողությունը հաջողությամբ կատարվեց", "Կրկնօրինակում", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void btnUpdateClasses_Click(object sender, EventArgs e)
+        private void checkBoxInsert_CheckedChanged(object sender, EventArgs e)
         {
+            if (checkBoxInsert.Checked)
+            {
+                btnInsertClasses.Visible = true;
+                labelInsertClassesPath.Visible = true;
+                btnSave.Visible = true;
+            }
+            else
+            {
+                btnInsertClasses.Visible = false;
+                labelInsertClassesPath.Visible = false;
+                btnSave.Visible = false;
+                btnSave.BackColor = Color.Transparent;
+                labelInsertClassesPath.Text = string.Empty;
+                btnSave.Enabled= false;
+            }
+        }
+
+        private void btnInsertClasses_Click(object sender, EventArgs e)
+        {
+            using (var folderBrowserDialog = new FolderBrowserDialog())
+            {
+                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Use the selected directory path here
+                    string selectedDirectoryPath = folderBrowserDialog.SelectedPath;
+                    labelInsertClassesPath.Visible = true;
+                    labelInsertClassesPath.Text = selectedDirectoryPath; // Update your label or use the path as needed
+                    btnSave.Enabled = true;
+                    btnSave.BackColor = Color.LightGreen;
+                }
+            }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
+
             string destinationDirectory = Path.Combine(_directory, "Classes");
+            string sourceDirectory = labelInsertClassesPath.Text;
 
             if (!Directory.Exists(destinationDirectory))
                 Directory.CreateDirectory(destinationDirectory);
 
-            string sourceDirectory = string.Empty;
-
-            progressBarUpdate.Visible = true;
+            progressBarInsert.Visible = true;
 
             // Get all.cs files in the source directory
             string[] csFiles = Directory.GetFiles(sourceDirectory, "*.cs");
 
             // Copy each.cs file to the destination directory
+            int cout = 0;
             foreach (string filePath in csFiles)
             {
                 string fileName = Path.GetFileName(filePath);
@@ -432,12 +483,22 @@ namespace JsonGenerator.UI
 
                 // Check if the file already exists in the destination directory
                 if (!File.Exists(destinationPath))
+                {
                     File.Copy(filePath, destinationPath, true);
+                    cout++;
+                }
+                    
             }
+            progressBarInsert.Visible = false;
 
-            progressBarUpdate.Visible = false;
+            _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
 
-            MessageBox.Show("Գործողությունը հաջողությամբ կատարվեց", "Կրկնօրինակում", MessageBoxButtons.OK, MessageBoxIcon.Information);
+           comboBoxTemplateNames.DataSource = null;
+           comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(_directory, "Classes"));
+
+            MessageBox.Show("Գործողությունը ավարտվեց, պատճենվեց " + cout + " ֆայլ", "Կրկնօրինակում", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            checkBoxInsert.Checked = false;
         }
     }
 }
