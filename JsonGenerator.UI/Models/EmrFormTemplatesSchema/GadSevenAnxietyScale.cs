@@ -3,7 +3,7 @@ using Newtonsoft.Json.Converters;
 
 namespace JsonGenerator.UI.Models.EmrFormTemplatesSchema;
 
-public class GadSevenAssessment
+public class GadSevenAnxietyScale
 {
     [Required]
     public DateTime Birthdate { get; set; }

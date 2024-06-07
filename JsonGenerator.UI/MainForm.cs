@@ -2,10 +2,15 @@
 using Json.Schema;
 using Json.Schema.Generation;
 using JsonGenerator.UI.Models;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Configuration;
+using System.IO;
 using System.Reflection;
+using System.Text;
 
 namespace JsonGenerator.UI
 {
@@ -252,10 +257,53 @@ namespace JsonGenerator.UI
         }
         private void btnGeneretSchema_Click(object sender, EventArgs e)
         {
-            Type classType = Assamblies.SelectMany(a => a.GetTypes()).FirstOrDefault(t => string.Equals(t.Name, _className));
+            Type classType =  AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).FirstOrDefault(t => string.Equals(t.Name, _className));
 
-            if (classType != null)
+            ///AppDomain.CurrentDomain.GetAssemblies()
+
+            if (classType == null)
+            {
+                // Path to the assembly you want to load (DLL file)
+
+                string dllDirectoryPath = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty, "Dlls");
+
+
+                string dllFileName = _className + ".dll";
+
+                string assemblyPath = Path.Combine(dllDirectoryPath, dllFileName);
+
+                // Check if the file exists
+                if (!File.Exists(assemblyPath))
+                {
+                    MessageBox.Show($"The assembly file was not found at: {assemblyPath}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                try
+                {
+                    // Load the assembly
+                    Assembly loadedAssembly = Assembly.LoadFrom(assemblyPath);
+
+                    // Display some information about the loaded assembly
+                    Console.WriteLine($"Assembly FullName: {loadedAssembly.FullName}");
+
+                    // List all types in the assembly
+                    Type type = loadedAssembly.GetTypes().FirstOrDefault(t => string.Equals(t.Name, _className));
+
+                    CreateFileForSchema(type, _className);
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred while loading the assembly: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+            }
+            else
+            {
                 CreateFileForSchema(classType, _className);
+            }
 
             btnGeneretSchema.Enabled = false;
             btnGeneretSchema.BackColor = SystemColors.Window;
@@ -280,16 +328,56 @@ namespace JsonGenerator.UI
         }
         private void btnGeneretExample_Click(object sender, EventArgs e)
         {
-            Type classType = Assamblies.SelectMany(a => a.GetTypes()).FirstOrDefault(t => string.Equals(t.Name, _className));
+            Type classType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).FirstOrDefault(t => string.Equals(t.Name, _className));
 
-            if (classType != null)
+
+            if (classType == null)
             {
-                // Using reflection to call the generic method
+                Assembly loadedAssembly;
+                // Path to the assembly you want to load (DLL file)
+
+                string dllDirectoryPath = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty, "Dlls");
+
+
+                string dllFileName = _className + ".dll";
+
+                string assemblyPath = Path.Combine(dllDirectoryPath, dllFileName);
+
+                // Check if the file exists
+                if (!File.Exists(assemblyPath))
+                {
+                    MessageBox.Show($"The assembly file was not found at: {assemblyPath}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                try
+                {
+                    // Load the assembly
+                   loadedAssembly = Assembly.LoadFrom(assemblyPath);
+
+                    // Display some information about the loaded assembly
+                    Console.WriteLine($"Assembly FullName: {loadedAssembly.FullName}");
+
+                    // List all types in the assembly
+                    Type type = loadedAssembly.GetTypes().FirstOrDefault(t => string.Equals(t.Name, _className));
+
+                    MethodInfo method = GetType().GetMethod("CreateFileForExampleJson", BindingFlags.NonPublic | BindingFlags.Instance);
+                    MethodInfo genericMethod = method.MakeGenericMethod(type);
+                    genericMethod.Invoke(this, new object[] { _className });
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred while loading the assembly: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+            }
+            else
+            {
                 MethodInfo method = GetType().GetMethod("CreateFileForExampleJson", BindingFlags.NonPublic | BindingFlags.Instance);
                 MethodInfo genericMethod = method.MakeGenericMethod(classType);
                 genericMethod.Invoke(this, new object[] { _className });
-
-                //CreateFileForExampleJson<TModel>(_className);
             }
 
             btnGeneretExample.Enabled = false;
@@ -416,12 +504,13 @@ namespace JsonGenerator.UI
             string destinationFilePath = Path.Combine(destinationDirectory, Path.GetFileName(filePath));
             File.Copy(filePath, destinationFilePath, true); // Overwrite if the file already exists
 
+            GenerateDllFile(filePath);
+
             btnSaveClass.Enabled = false;
             labelClassPath.Text = string.Empty;
             btnSaveClass.BackColor = Color.Transparent;
             MessageBox.Show("Գործողությունը հաջողությամբ կատարվեց", "Կրկնօրինակում", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
         private void checkBoxInsert_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxInsert.Checked)
@@ -499,6 +588,50 @@ namespace JsonGenerator.UI
             MessageBox.Show("Գործողությունը ավարտվեց, պատճենվեց " + cout + " ֆայլ", "Կրկնօրինակում", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             checkBoxInsert.Checked = false;
+        }
+   
+        private void GenerateDllFile(string filePath)
+        {
+            string code = File.ReadAllText(filePath);
+
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
+
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+
+            var references = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic)
+                .Select(a => MetadataReference.CreateFromFile(a.Location))
+                .Cast<MetadataReference>()
+                .ToList();
+
+            var compilation = CSharpCompilation.Create(
+                "DynamicLibrary",
+                new[] { syntaxTree },
+                references,
+                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+            string dllDirectoryPath = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty, "Dlls");
+
+            if (!Directory.Exists(dllDirectoryPath))
+                Directory.CreateDirectory(dllDirectoryPath);
+
+            string dllFileName = fileName + ".dll";
+
+            string dllPath = Path.Combine(dllDirectoryPath, dllFileName);
+
+            EmitResult result = compilation.Emit(dllPath);
+
+
+            if (!result.Success)
+            {
+                StringBuilder diagnosticList = new StringBuilder();
+                foreach (Diagnostic diagnostic in result.Diagnostics)
+                {
+                    diagnosticList.Append(diagnostic.ToString());   
+                }
+                MessageBox.Show($"Compilation failed: {diagnosticList.ToString()}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
     }
 }
