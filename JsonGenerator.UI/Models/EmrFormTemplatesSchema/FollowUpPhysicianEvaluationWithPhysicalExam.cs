@@ -1,4 +1,5 @@
-﻿using Json.Schema.Generation;
+﻿using System;
+using Json.Schema.Generation;
 using Newtonsoft.Json.Converters;
 
 namespace JsonGenerator.UI.Models.EmrFormTemplatesSchema;
@@ -60,29 +61,29 @@ public class FollowUpPhysicianEvaluationWithPhysicalExam
 
     [Required]
     [MinItems(1)]
-    public List<InterimHistory> InterimHistories { get; set; }
+    public System.Collections.Generic.List<InterimHistory> InterimHistories { get; set; }
 
 
     [Required]
     [MinItems(1)]
-    public List<PlanType> PrescribedMedications { get; set; }
+    public System.Collections.Generic.List<PlanType> PrescribedMedications { get; set; }
 
-    public List<MedicationCustomization> MedicationCustomizations { get; set; }
+    public System.Collections.Generic.List<MedicationCustomization> MedicationCustomizations { get; set; }
 
     [Required(ConditionGroup = nameof(PrescribedMedications))]
     [MinItems(1)]
-    public List<string> PrescribedMedicationAdditional { get; set; }
+    public System.Collections.Generic.List<string> PrescribedMedicationAdditional { get; set; }
 
     public string PrescribedMedicationAdditionalComment { get; set; }
 
     [Required]
     [MinItems(1)]
-    public List<InterimTreatmentUpdate> InterimTreatmentUpdates { get; set; }
+    public System.Collections.Generic.List<InterimTreatmentUpdate> InterimTreatmentUpdates { get; set; }
 
     [Required(ConditionGroup = nameof(InterimTreatmentUpdates))]
-    public List<string> InterimTreatmentAdditionalComment { get; set; }
+    public System.Collections.Generic.List<string> InterimTreatmentAdditionalComment { get; set; }
 
-    public List<PhysicianEvaluationAllergy> Allergies { get; set; }
+    public System.Collections.Generic.List<PhysicianEvaluationAllergy> Allergies { get; set; }
 
     [Required]
     public TobaccoAndNicotineUse TobaccoAndNicotineUse { get; set; }
@@ -181,10 +182,10 @@ public class FollowUpPhysicianEvaluationWithPhysicalExam
 
     [Required]
     [MinItems(1)]
-    public List<FollowUpPhysicianEvaluationPlan> Plans { get; set; }
+    public System.Collections.Generic.List<FollowUpPhysicianEvaluationPlan> Plans { get; set; }
 
     [Required(ConditionGroup = nameof(Plans))]
-    public List<string> AdditionalCommentPlan { get; set; }
+    public System.Collections.Generic.List<string> AdditionalCommentPlan { get; set; }
 
     public string AdditionalComment { get; set; }
 }

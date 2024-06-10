@@ -1,4 +1,5 @@
-﻿using Json.Schema.Generation;
+﻿using System;
+using Json.Schema.Generation;
 using Newtonsoft.Json.Converters;
 
 namespace JsonGenerator.UI.Models.EmrFormTemplatesSchema;

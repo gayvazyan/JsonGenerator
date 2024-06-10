@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace JsonGenerator.UI.Models.EmrFormTemplatesSchema;
 
@@ -98,9 +99,9 @@ public class HealthScreeningQuestionnaire
     [Required]
     public string VisitPhysicianOrPsychiatrist { get; set; }
 
-    public List<PastSevenDaysDrugUse> DrugUseInPastSevenDays { get; set; }
-    public List<PastYearDrugUse> PastYearDrugUses { get; set; }
-    public List<PrescriptionMedication> PrescriptionMedications { get; set; }
+    public System.Collections.Generic.List<PastSevenDaysDrugUse> DrugUseInPastSevenDays { get; set; }
+    public System.Collections.Generic.List<PastYearDrugUse> PastYearDrugUses { get; set; }
+    public System.Collections.Generic.List<PrescriptionMedication> PrescriptionMedications { get; set; }
 
     [Required]
     public bool FeelingDown { get; set; }
@@ -117,7 +118,7 @@ public class HealthScreeningQuestionnaire
     public bool PartnerPushedOrSlapped { get; set; }
 
     public string PartnerPushedOrSlappedDetails { get; set; }
-    public List<AlcoholismOrDrugAbuseRecoveryTreatment> AlcoholismOrDrugAbuseRecoveryTreatments { get; set; }
+    public System.Collections.Generic.List<AlcoholismOrDrugAbuseRecoveryTreatment> AlcoholismOrDrugAbuseRecoveryTreatments { get; set; }
 
     [Required]
     public bool WithdrawalSymptomsTreatment { get; set; }

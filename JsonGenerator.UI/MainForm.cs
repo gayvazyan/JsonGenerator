@@ -12,6 +12,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
+
 namespace JsonGenerator.UI
 {
     public partial class MainForm : Form
@@ -259,8 +260,6 @@ namespace JsonGenerator.UI
         {
             Type classType =  AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).FirstOrDefault(t => string.Equals(t.Name, _className));
 
-            ///AppDomain.CurrentDomain.GetAssemblies()
-
             if (classType == null)
             {
                 // Path to the assembly you want to load (DLL file)
@@ -271,6 +270,7 @@ namespace JsonGenerator.UI
                 string dllFileName = _className + ".dll";
 
                 string assemblyPath = Path.Combine(dllDirectoryPath, dllFileName);
+               
 
                 // Check if the file exists
                 if (!File.Exists(assemblyPath))
@@ -330,14 +330,12 @@ namespace JsonGenerator.UI
         {
             Type classType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).FirstOrDefault(t => string.Equals(t.Name, _className));
 
-
             if (classType == null)
             {
                 Assembly loadedAssembly;
                 // Path to the assembly you want to load (DLL file)
 
                 string dllDirectoryPath = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty, "Dlls");
-
 
                 string dllFileName = _className + ".dll";
 
@@ -597,6 +595,13 @@ namespace JsonGenerator.UI
             string fileName = Path.GetFileNameWithoutExtension(filePath);
 
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
+
+            var dataAnnotationsRef = typeof(System.ComponentModel.DataAnnotations.RequiredAttribute).Assembly.Location;
+            var jsonExcludeAttribute = typeof(Json.Schema.Generation.JsonExcludeAttribute).Assembly.Location;
+            var jsonSchemaBuilderExtensions = typeof(Json.Schema.Generation.JsonSchemaBuilderExtensions).Assembly.Location;
+            var newtonsoft = typeof(Newtonsoft.Json.Converters.StringEnumConverter).Assembly.Location;
+            var list = typeof(System.Collections.Generic.List<>).Assembly.Location;
+
 
             var references = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(a => !a.IsDynamic)

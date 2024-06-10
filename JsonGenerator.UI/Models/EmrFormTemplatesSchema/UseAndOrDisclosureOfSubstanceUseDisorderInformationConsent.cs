@@ -1,3 +1,4 @@
+using System;
 using Json.Schema.Generation;
 
 namespace JsonGenerator.UI.Models.EmrFormTemplatesSchema;

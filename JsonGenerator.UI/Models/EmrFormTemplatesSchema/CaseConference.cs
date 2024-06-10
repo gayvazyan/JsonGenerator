@@ -1,3 +1,4 @@
+using System;
 using Json.Schema.Generation;
 using Newtonsoft.Json.Converters;
 
@@ -26,7 +27,7 @@ public class CaseConference
     public string PatientSignuture { get; set; }
 
     [Required]
-    public List<TreatmentPlanSection> Sections { get; set; }
+    public System.Collections.Generic.List<TreatmentPlanSection> Sections { get; set; }
 
     public string Summary { get; set; }
 }

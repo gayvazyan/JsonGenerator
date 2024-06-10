@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json.Converters;
 
 namespace JsonGenerator.UI.Models.EmrFormTemplatesSchema;
@@ -15,7 +16,7 @@ public class InitialDrugScreenClientConsentAndResults
     public string Temperature { get; set; }
 
     [Required]
-    public List<DrugScreen> DrugScreenResults { get; set; }
+    public System.Collections.Generic.List<DrugScreen> DrugScreenResults { get; set; }
 
     public string DrugScreenResultOther { get; set; }
 }
