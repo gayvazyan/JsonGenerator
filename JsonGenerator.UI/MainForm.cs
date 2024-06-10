@@ -11,6 +11,7 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 
 
 namespace JsonGenerator.UI
@@ -592,9 +593,18 @@ namespace JsonGenerator.UI
         {
             string code = File.ReadAllText(filePath);
 
+            string pattern = @"List";
+
+            // Replacement string
+            string replacement = "System.Collections.Generic.List";
+
+            // Replace all occurrences of "List" with "System.Collections.Generic.List"
+            string replacedText = Regex.Replace(code, pattern, replacement);
+
+
             string fileName = Path.GetFileNameWithoutExtension(filePath);
 
-            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var syntaxTree = CSharpSyntaxTree.ParseText(replacedText);
 
             var dataAnnotationsRef = typeof(System.ComponentModel.DataAnnotations.RequiredAttribute).Assembly.Location;
             var jsonExcludeAttribute = typeof(Json.Schema.Generation.JsonExcludeAttribute).Assembly.Location;
