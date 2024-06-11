@@ -40,6 +40,8 @@
             label1 = new Label();
             tabControl = new TabControl();
             tabPageGeneral = new TabPage();
+            btnCopy = new Button();
+            viewJsonbtn = new Button();
             progressBarInsert = new ProgressBar();
             btnSave = new Button();
             checkBoxInsert = new CheckBox();
@@ -149,11 +151,13 @@
             tabControl.Location = new Point(0, 28);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(1741, 870);
+            tabControl.Size = new Size(1741, 1021);
             tabControl.TabIndex = 3;
             // 
             // tabPageGeneral
             // 
+            tabPageGeneral.Controls.Add(btnCopy);
+            tabPageGeneral.Controls.Add(viewJsonbtn);
             tabPageGeneral.Controls.Add(progressBarInsert);
             tabPageGeneral.Controls.Add(btnSave);
             tabPageGeneral.Controls.Add(checkBoxInsert);
@@ -168,14 +172,38 @@
             tabPageGeneral.Location = new Point(4, 29);
             tabPageGeneral.Name = "tabPageGeneral";
             tabPageGeneral.Padding = new Padding(3);
-            tabPageGeneral.Size = new Size(1733, 837);
+            tabPageGeneral.Size = new Size(1733, 988);
             tabPageGeneral.TabIndex = 0;
             tabPageGeneral.Text = "Գլխավոր";
             tabPageGeneral.UseVisualStyleBackColor = true;
             // 
+            // btnCopy
+            // 
+            btnCopy.BackColor = Color.LemonChiffon;
+            btnCopy.Location = new Point(1324, 678);
+            btnCopy.Name = "btnCopy";
+            btnCopy.Size = new Size(248, 59);
+            btnCopy.TabIndex = 26;
+            btnCopy.Text = "Պատճենել json schema-ն";
+            btnCopy.UseVisualStyleBackColor = false;
+            btnCopy.Visible = false;
+            btnCopy.Click += btnCopy_Click;
+            // 
+            // viewJsonbtn
+            // 
+            viewJsonbtn.BackColor = Color.LightCyan;
+            viewJsonbtn.Location = new Point(1043, 678);
+            viewJsonbtn.Name = "viewJsonbtn";
+            viewJsonbtn.Size = new Size(248, 59);
+            viewJsonbtn.TabIndex = 25;
+            viewJsonbtn.Text = "Ցուցադրել որպես JSON";
+            viewJsonbtn.UseVisualStyleBackColor = false;
+            viewJsonbtn.Visible = false;
+            viewJsonbtn.Click += viewJson_Click;
+            // 
             // progressBarInsert
             // 
-            progressBarInsert.Location = new Point(84, 773);
+            progressBarInsert.Location = new Point(84, 872);
             progressBarInsert.MarqueeAnimationSpeed = 30;
             progressBarInsert.Name = "progressBarInsert";
             progressBarInsert.Size = new Size(1594, 29);
@@ -188,7 +216,7 @@
             // 
             btnSave.BackColor = Color.Transparent;
             btnSave.Enabled = false;
-            btnSave.Location = new Point(344, 686);
+            btnSave.Location = new Point(344, 785);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(248, 51);
             btnSave.TabIndex = 23;
@@ -200,7 +228,7 @@
             // checkBoxInsert
             // 
             checkBoxInsert.AutoSize = true;
-            checkBoxInsert.Location = new Point(84, 649);
+            checkBoxInsert.Location = new Point(84, 748);
             checkBoxInsert.Name = "checkBoxInsert";
             checkBoxInsert.Size = new Size(376, 24);
             checkBoxInsert.TabIndex = 8;
@@ -211,7 +239,7 @@
             // btnInsertClasses
             // 
             btnInsertClasses.BackColor = Color.PeachPuff;
-            btnInsertClasses.Location = new Point(84, 686);
+            btnInsertClasses.Location = new Point(84, 785);
             btnInsertClasses.Name = "btnInsertClasses";
             btnInsertClasses.Size = new Size(238, 51);
             btnInsertClasses.TabIndex = 7;
@@ -223,7 +251,7 @@
             // labelInsertClassesPath
             // 
             labelInsertClassesPath.AutoSize = true;
-            labelInsertClassesPath.Location = new Point(624, 701);
+            labelInsertClassesPath.Location = new Point(624, 800);
             labelInsertClassesPath.Name = "labelInsertClassesPath";
             labelInsertClassesPath.Size = new Size(0, 20);
             labelInsertClassesPath.TabIndex = 6;
@@ -292,7 +320,7 @@
             tabPageConfig.Location = new Point(4, 29);
             tabPageConfig.Name = "tabPageConfig";
             tabPageConfig.Padding = new Padding(3);
-            tabPageConfig.Size = new Size(1733, 837);
+            tabPageConfig.Size = new Size(1733, 988);
             tabPageConfig.TabIndex = 1;
             tabPageConfig.Text = "Կարգավորումներ";
             tabPageConfig.UseVisualStyleBackColor = true;
@@ -499,7 +527,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1741, 898);
+            ClientSize = new Size(1741, 1049);
             Controls.Add(tabControl);
             Controls.Add(menuStrip);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -562,5 +590,7 @@
         private CheckBox checkBoxInsert;
         private Button btnSave;
         private ProgressBar progressBarInsert;
+        private Button btnCopy;
+        private Button viewJsonbtn;
     }
 }

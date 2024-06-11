@@ -12,6 +12,8 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace JsonGenerator.UI
@@ -66,6 +68,10 @@ namespace JsonGenerator.UI
 
             richTextBoxJsonSchem.Text = string.Empty;
             richTextBoxJsonSchem.Visible = false;
+
+            viewJsonbtn.Visible = false;
+            btnCopy.Visible = false;
+            btnCopy.BackColor = Color.LemonChiffon;
 
             if (comboBoxTemplateNames != null)
                 _className = comboBoxTemplateNames?.SelectedValue?.ToString() ?? string.Empty;
@@ -129,7 +135,7 @@ namespace JsonGenerator.UI
             _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
 
             comboBoxTemplateNames.DataSource = null;
-           comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(_directory, "Classes"));
+            comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(_directory, "Classes"));
             //comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(_projectRoot, "Models", "EmrFormTemplatesSchema"));
 
             if (!tabControl.TabPages.Contains(tabPageGeneral))
@@ -259,7 +265,7 @@ namespace JsonGenerator.UI
         }
         private void btnGeneretSchema_Click(object sender, EventArgs e)
         {
-            Type classType =  AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).FirstOrDefault(t => string.Equals(t.Name, _className));
+            Type classType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).FirstOrDefault(t => string.Equals(t.Name, _className));
 
             if (classType == null)
             {
@@ -271,7 +277,7 @@ namespace JsonGenerator.UI
                 string dllFileName = _className + ".dll";
 
                 string assemblyPath = Path.Combine(dllDirectoryPath, dllFileName);
-               
+
 
                 // Check if the file exists
                 if (!File.Exists(assemblyPath))
@@ -324,8 +330,11 @@ namespace JsonGenerator.UI
 
             var rawText = schemaDoc.RootElement.GetRawText();
             File.WriteAllText(schemaFileName, rawText);
+
             richTextBoxJsonSchem.Text = rawText;
             richTextBoxJsonSchem.Visible = true;
+            viewJsonbtn.Visible = true;
+            btnCopy.Visible = true;
         }
         private void btnGeneretExample_Click(object sender, EventArgs e)
         {
@@ -352,7 +361,7 @@ namespace JsonGenerator.UI
                 try
                 {
                     // Load the assembly
-                   loadedAssembly = Assembly.LoadFrom(assemblyPath);
+                    loadedAssembly = Assembly.LoadFrom(assemblyPath);
 
                     // Display some information about the loaded assembly
                     Console.WriteLine($"Assembly FullName: {loadedAssembly.FullName}");
@@ -525,7 +534,7 @@ namespace JsonGenerator.UI
                 btnSave.Visible = false;
                 btnSave.BackColor = Color.Transparent;
                 labelInsertClassesPath.Text = string.Empty;
-                btnSave.Enabled= false;
+                btnSave.Enabled = false;
             }
         }
 
@@ -575,20 +584,20 @@ namespace JsonGenerator.UI
                     File.Copy(filePath, destinationPath, true);
                     cout++;
                 }
-                    
+
             }
             progressBarInsert.Visible = false;
 
             _directory = Path.Combine(_desktopPath, _config.BaseFolderName ?? string.Empty);
 
-           comboBoxTemplateNames.DataSource = null;
-           comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(_directory, "Classes"));
+            comboBoxTemplateNames.DataSource = null;
+            comboBoxTemplateNames.DataSource = GetTemplateNames(Path.Combine(_directory, "Classes"));
 
             MessageBox.Show("Գործողությունը ավարտվեց, պատճենվեց " + cout + " ֆայլ", "Կրկնօրինակում", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             checkBoxInsert.Checked = false;
         }
-   
+
         private void GenerateDllFile(string filePath)
         {
             string code = File.ReadAllText(filePath);
@@ -642,11 +651,36 @@ namespace JsonGenerator.UI
                 StringBuilder diagnosticList = new StringBuilder();
                 foreach (Diagnostic diagnostic in result.Diagnostics)
                 {
-                    diagnosticList.Append(diagnostic.ToString());   
+                    diagnosticList.Append(diagnostic.ToString());
                 }
                 MessageBox.Show($"Compilation failed: {diagnosticList.ToString()}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+        }
+
+        private void viewJson_Click(object sender, EventArgs e)
+        {
+            var jsonObject = JsonConvert.DeserializeObject(richTextBoxJsonSchem.Text);
+
+            // Convert the object back to a JSON string with indentation for formatting
+            string formattedJson = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
+
+            JsonViwerForm jsonViwerForm = new JsonViwerForm(formattedJson, "Json Viewer");
+
+            jsonViwerForm.ShowDialog();
+
+        }
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+
+            Clipboard.SetText(richTextBoxJsonSchem.Text);
+            btnCopy.Text = "Պատճենված է!";
+            btnCopy.BackColor = Color.LightGreen;
+            Application.DoEvents();
+            Thread.Sleep(2000);
+            btnCopy.Text = "Պատճենել json schema-ն";
+            btnCopy.BackColor = Color.LemonChiffon;
         }
     }
 }
